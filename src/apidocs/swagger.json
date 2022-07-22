@@ -1,0 +1,852 @@
+{
+  "basePath": "/v1",
+  "definitions": {
+    "Action": {
+      "properties": {
+        "action": {
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "Credentials": {
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "LoginHistory": {
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "ip": {
+          "type": "string"
+        },
+        "login_at": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Message": {
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "NewUser": {
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "second_password": {
+          "type": "string"
+        }
+      }
+    },
+    "Profile": {
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "second_password": {
+          "type": "string"
+        }
+      }
+    },
+    "Role": {
+      "properties": {
+        "actions": {
+          "items": {
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UserRole": {
+      "properties": {
+        "role_id": {
+          "type": "integer"
+        },
+        "user_id": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "host": "127.0.0.1:8000",
+  "info": {
+    "description": "powered by Flasgger",
+    "title": "Auth service",
+    "version": "1.0.1"
+  },
+  "paths": {
+    "/access/action": {
+      "delete": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get action",
+            "schema": {
+              "properties": {
+                "action": {
+                  "$ref": "#/definitions/Action"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Delete an action.",
+        "tags": [
+          "action"
+        ]
+      },
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get action",
+            "schema": {
+              "$ref": "#/definitions/Action"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Read an action.",
+        "tags": [
+          "action"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Action name",
+            "required": true,
+            "schema": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Action added",
+            "schema": {
+              "properties": {
+                "action": {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Action already created",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Add a new action.",
+        "tags": [
+          "action"
+        ]
+      }
+    },
+    "/access/assign": {
+      "delete": {
+        "parameters": [
+          {
+            "in": "body",
+            "name": "User role",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserRole"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Role assigned",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "user_role": {
+                  "$ref": "#/definitions/UserRole"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Assignment already created",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "user_role": {
+                  "$ref": "#/definitions/UserRole"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Retract a role from a user.",
+        "tags": [
+          "role assignment"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "in": "body",
+            "name": "User role",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserRole"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Role assigned",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "user_role": {
+                  "$ref": "#/definitions/UserRole"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Assignment already created",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "user_role": {
+                  "$ref": "#/definitions/UserRole"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Assign a role to a user.",
+        "tags": [
+          "role assignment"
+        ]
+      }
+    },
+    "/access/role": {
+      "delete": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role deleted",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "role": {
+                  "$ref": "#/definitions/Role"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Delete a role.",
+        "tags": [
+          "role"
+        ]
+      },
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role read",
+            "schema": {
+              "$ref": "#/definitions/Role"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Read a role.",
+        "tags": [
+          "role"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "in": "body",
+            "name": "actions",
+            "required": true,
+            "schema": {
+              "default": "action1,action2,action3",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role added",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "role": {
+                  "$ref": "#/definitions/Role"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Role already created",
+            "schema": {
+              "$ref": "#/definitions/Message"
+            }
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Add a new role.",
+        "tags": [
+          "role"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "default": "action1,action2,action3",
+            "in": "query",
+            "name": "actions",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Role updated",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "role": {
+                  "$ref": "#/definitions/Role"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Update a role.",
+        "tags": [
+          "role"
+        ]
+      }
+    },
+    "/history": {
+      "get": {
+        "parameters": [
+          {
+            "default": 1,
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "default": 10,
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "History returned",
+            "schema": {
+              "$ref": "#/definitions/LoginHistory"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/WrongCredentials"
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get login history.",
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/login": {
+      "post": {
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Credentials",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Credentials"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User logined",
+            "schema": {
+              "properties": {
+                "access_token": {
+                  "type": "string"
+                },
+                "refresh_token": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/WrongCredentials"
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        },
+        "summary": "Login.",
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/logout": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Log out",
+            "schema": {
+              "$ref": "#/definitions/Message"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/WrongCredentials"
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Logout.",
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/logout-all": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Log out",
+            "schema": {
+              "$ref": "#/definitions/Message"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/WrongCredentials"
+          },
+          "401": {
+            "$ref": "#/responses/NotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Logout.",
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/profile": {
+      "put": {
+        "parameters": [
+          {
+            "in": "body",
+            "name": "User profile",
+            "schema": {
+              "$ref": "#/definitions/Profile"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User data updated",
+            "schema": {
+              "$ref": "#/definitions/Message"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/WrongCredentials"
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          }
+        },
+        "summary": "Update user data.",
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/refresh": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "New tokens generated",
+            "schema": {
+              "properties": {
+                "access_token": {
+                  "type": "string"
+                },
+                "refresh_token": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/WrongCredentials"
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get new session and refresh tokens.",
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/sign-up": {
+      "post": {
+        "parameters": [
+          {
+            "in": "body",
+            "name": "user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User registered",
+            "schema": {
+              "$ref": "#/definitions/Message"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/WrongCredentials"
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          }
+        },
+        "summary": "Register a new user.",
+        "tags": [
+          "user"
+        ]
+      }
+    }
+  },
+  "responses": {
+    "BadRequest": {
+      "description": "Missing parameters",
+      "schema": {
+        "$ref": "#/definitions/Message"
+      }
+    },
+    "NotFound": {
+      "description": "Not found",
+      "schema": {
+        "$ref": "#/definitions/Action"
+      }
+    },
+    "Unauthorized": {
+      "description": "Unauthorized",
+      "schema": {
+        "$ref": "#/definitions/Message"
+      }
+    },
+    "UnprocessableEntity": {
+      "description": "Bad JWT-token"
+    },
+    "UserConflict": {
+      "description": "User with the same name or email is already registered"
+    },
+    "WrongCredentials": {
+      "description": "Wrong credentials",
+      "schema": {
+        "$ref": "#/definitions/Message"
+      }
+    }
+  },
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Should be in the following format: 'Bearer <access_token>'",
+      "in": "header",
+      "name": "Authorization",
+      "type": "apiKey"
+    }
+  },
+  "swagger": "2.0"
+}

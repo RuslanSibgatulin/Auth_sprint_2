@@ -1,0 +1,19 @@
+services:
+
+  db:
+    env_file: envs/dev.env
+    ports:
+      - 5432:5432
+
+  app:
+    build:
+      target: dev
+    env_file: envs/dev.env
+    volumes:
+      - ../src:/app
+
+  adminer:
+    image: adminer
+    ports:
+      - 9999:8080
+    restart: unless-stopped

@@ -1,0 +1,6 @@
+[flake8]
+ignore = I001, I005, E203
+max-line-length = 119
+max-complexity = 18
+select = B,C,E,F,I,W,T4,B9,Q0
+inline-quotes = "

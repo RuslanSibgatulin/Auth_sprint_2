@@ -1,0 +1,30 @@
+# syntax = docker/dockerfile:1.3
+
+FROM python:3.9-slim as base
+
+RUN apt update \
+    && apt upgrade -y \
+    && apt install -y build-essential libpq-dev
+
+RUN apt install gcc -y
+
+COPY requirements /tmp/requirements
+RUN --mount=type=cache,target=/root/.cache \
+    pip install -r /tmp/requirements/prod.txt
+
+WORKDIR /app
+
+FROM base as prod
+
+COPY ./src /app
+
+CMD ["uwsgi", "--module", "main:app", "--http", "0.0.0.0:8000"]
+
+FROM base as dev
+
+RUN --mount=type=cache,target=/root/.cache \
+    pip install -r /tmp/requirements/dev.txt
+
+ENV FLASK_ENV=development
+
+CMD ["python", "-m", "flask", "run", "--debugger", "--reload", "--host", "0.0.0.0", "--port", "8000"]

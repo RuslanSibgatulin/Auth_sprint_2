@@ -1,0 +1,24 @@
+services:
+
+  db:
+    volumes:
+          - db_data_test:/var/lib/postgresql/data
+    env_file: envs/test.env
+
+  app:
+    env_file: envs/test.env
+
+  functional_tests:
+    build:
+      context: ..
+      dockerfile: docker/dockerfiles/TestDockerfile
+    depends_on:
+      app:
+        condition: service_started
+    env_file: envs/test.env
+    volumes:
+      - ../tests/functional:/tests/functional:ro
+
+
+volumes:
+  db_data_test:
