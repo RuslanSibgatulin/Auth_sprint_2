@@ -2,11 +2,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-from config import settings
+from config import Postgres_dsn
 
 
 engine = create_engine(
-    settings.POSTGRES_URI,
+    Postgres_dsn().url(),
     convert_unicode=True
 )
 db_session = scoped_session(sessionmaker(autocommit=False,
@@ -17,4 +17,7 @@ Base.query = db_session.query_property()
 
 
 def init_db():
-    Base.metadata.create_all(bind=engine)
+    # DEPRECATED: init db structure by scripts from src/db/scripts
+    # mounted to docker-entrypoint-initdb.d postgres docker container
+    # Base.metadata.create_all(bind=engine)
+    pass

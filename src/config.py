@@ -1,15 +1,26 @@
 from pathlib import Path
 
-from pydantic import BaseSettings
+from pydantic import BaseSettings, Field
 
 BASE_DIR = Path(__file__).parent.resolve()
+
+
+class Postgres_dsn(BaseSettings):
+    host: str = Field('127.0.0.1', env='POSTGRES_HOST')
+    user: str = Field(env='POSTGRES_USER')
+    psw: str = Field(env='POSTGRES_PASSWORD')
+    dbname: str = Field(env='POSTGRES_DB')
+
+    def url(self):
+        return 'postgresql://{user}:{psw}@{host}/{dbname}'.format_map(
+            self.dict()
+        )
 
 
 class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     REDIS_HOST: str = "127.0.0.1"
     REDIS_PORT: int = 6379
-    POSTGRES_URI: str = "postgresql://postgres:postgres@127.0.0.1:5432/auth"
     DEBUG: bool = True
     JWT_SECRET_KEY: str = "super-secret"
     SECRET_KEY: str = "extra secret"

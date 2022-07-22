@@ -1,20 +1,55 @@
-# Проектная работа 7 спринта
+# Сервис авторизации. Проектная работа 7 спринта.
+[![Generic badge](https://img.shields.io/badge/Changelog-<COLOR>.svg)](./CHANGELOG.md)
+[![Generic badge](https://img.shields.io/badge/Our-Team-<COLOR>.svg)](#команда)
 
-Упростите регистрацию и аутентификацию пользователей в Auth-сервисе, добавив вход через социальные сервисы. Список сервисов выбирайте исходя из целевой аудитории онлайн-кинотеатра — подумайте, какими социальными сервисами они пользуются. Например, использовать [OAuth от Github](https://docs.github.com/en/free-pro-team@latest/developers/apps/authorizing-oauth-apps){target="_blank"} — не самая удачная идея. Ваши пользователи не разработчики и вряд ли имеют аккаунт на Github. А вот добавить Twitter, Facebook, VK, Google, Yandex или Mail будет хорошей идеей.
 
-Вам не нужно делать фронтенд в этой задаче и реализовывать собственный сервер OAuth. Нужно реализовать протокол со стороны потребителя.
+Этот сервис будет аутентифицировать всех пользователей кинотеатра. Реализована возможность создать аккаунт используя учетную запись Yandex или VK.
+[Ссылка на приватный репозиторий с командной работой.](https://github.com/Riyce/Auth_sprint_2)
 
-Информация по OAuth у разных поставщиков данных: 
+## Используемые технологии
+- Код приложения на Python + Flask.
+- Регистрация с помощью социальных сетей (OAuth2).
+- Приложение запускается под управлением сервера gunicorn и использует Jaeger трассировку.
+- В качестве хранилища используется Postgres и Redis.
+- Все компоненты системы запускаются через Docker-compose.
 
-- [Twitter](https://developer.twitter.com/en/docs/authentication/overview){target="_blank"},
-- [Facebook](https://developers.facebook.com/docs/facebook-login/){target="_blank"},
-- [VK](https://vk.com/dev/access_token){target="_blank"},
-- [Google](https://developers.google.com/identity/protocols/oauth2){target="_blank"},
-- [Yandex](https://yandex.ru/dev/oauth/?turbo=true){target="_blank"},
-- [Mail](https://api.mail.ru/docs/guides/oauth/){target="_blank"}.
+# Запуск приложения
+## Клонировать репозиторий
+    git clone https://github.com/Riyce/Auth_sprint_2.git
 
-## Дополнительное задание
+## Подготовить .env файл с переменными окружения
+TODO: Актуализировать под текущий проект
+    POSTGRES_USER=auth_user
+    POSTGRES_PASSWORD=secret
+    POSTGRES_DB=auth_db
+    POSTGRES_HOST=postgres
 
-Реализуйте возможность открепить аккаунт в соцсети от личного кабинета. 
+    REDIS_HOST=redis
+    FLASK_APP=app flask run --with-threads
 
-Решение залейте в репозиторий текущего спринта и отправьте на ревью.
+    #JTW config
+    SECRET_KEY=secretkeysecretkey
+    ACCESS_TOKEN_EXPIRES_MINUTES=30
+    REFRESH_TOKEN_EXPIRES_DAYS=30
+
+## Запустить компоненты системы
+TODO: Актуализировать под текущий проект
+    docker-compose -f "docker-compose.yml" up -d --build 
+
+## Документация сервиса доступна по ссылке
+TODO: Актуализировать под текущий проект
+- http://127.0.0.1/openapi
+
+## Тестирование
+TODO: Актуализировать под текущий проект
+Тесты содержаться в диретории `tests/functional`. Для их запуска необходимо выполнить команду:
+
+    cd tests/functional && docker-compose -f "docker-compose.yml" up -d --build
+
+Результат тестирования будет сформирован в директории `tests/tests_result` и будет доступен в 2 видах:
+- [как текстовый вывод pytest](tests/tests_result/tests_result.txt)
+- [как HTML-отчет](tests/tests_result/report.html)
+
+# Команда
+- [Ruslan Sibgatulin (lead)](https://github.com/RuslanSibgatulin)
+- [Fedor Kuzminov](https://github.com/Riyce)
