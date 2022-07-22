@@ -1,5 +1,3 @@
-\c auth
-
 -- There are for general rights
 -- 1. create
 -- 2. read

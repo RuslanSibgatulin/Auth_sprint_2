@@ -32,13 +32,20 @@ TODO: Актуализировать под текущий проект
     ACCESS_TOKEN_EXPIRES_MINUTES=30
     REFRESH_TOKEN_EXPIRES_DAYS=30
 
-## Запустить компоненты системы
-TODO: Актуализировать под текущий проект
-    docker-compose -f "docker-compose.yml" up -d --build 
+## Запуск компонентов системы
+Перейти в каталог `docker`
 
-## Документация сервиса доступна по ссылке
-TODO: Актуализировать под текущий проект
-- http://127.0.0.1/openapi
+    cd docker
+
+### Для продакшен среды
+
+    DOCKER_BUILDKIT=1 docker-compose -f prod.yaml up --build --force-recreate
+
+### Для среды разработки
+    DOCKER_BUILDKIT=1 docker-compose -f prod.yaml -f dev-override.yaml up --build --force-recreate
+
+## Документация сервиса Auth доступна по ссылке
+- http://127.0.0.1:8000/openapi
 
 ## Тестирование
 TODO: Актуализировать под текущий проект
