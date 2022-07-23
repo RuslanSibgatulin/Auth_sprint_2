@@ -1,5 +1,7 @@
-services:
+volumes:
+  db_data:
 
+services:
   db:
     image: postgres:14.1-alpine
     env_file: envs/prod.env
@@ -17,6 +19,11 @@ services:
     image: redis:6.2.6-alpine
     healthcheck:
       test: redis-cli ping
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - 16686:16686
 
   nginx:
     image: nginx:1.21.6-alpine
@@ -40,5 +47,3 @@ services:
         condition: service_healthy
     env_file: envs/prod.env
 
-volumes:
-  db_data:
