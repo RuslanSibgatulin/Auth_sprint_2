@@ -45,7 +45,7 @@ TODO: Актуализировать под текущий проект
     DOCKER_BUILDKIT=1 docker-compose -f prod.yaml -f dev-override.yaml up --build --force-recreate
 
 ## Документация сервиса Auth доступна по ссылке
-- http://127.0.0.1:8000/openapi
+- http://127.0.0.1:8000/apidocs/
 
 ## Тестирование
 TODO: Актуализировать под текущий проект
