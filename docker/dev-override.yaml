@@ -5,7 +5,7 @@ services:
     ports:
       - 5432:5432
 
-  app:
+  auth:
     build:
       target: dev
     env_file: envs/dev.env

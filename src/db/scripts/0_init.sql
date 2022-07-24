@@ -1,6 +1,3 @@
-CREATE DATABASE auth;
-\c auth
-
 CREATE TABLE IF NOT EXISTS role
 (
     id          SERIAL PRIMARY KEY,
