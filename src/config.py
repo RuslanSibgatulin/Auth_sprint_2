@@ -1,21 +1,19 @@
 from pathlib import Path
 
-from pydantic import BaseSettings, Field
+from pydantic import BaseSettings
 
 BASE_DIR = Path(__file__).parent.resolve()
 
 
 class PostgresDNS(BaseSettings):
-    POSTGRES_HOST: str = Field('127.0.0.1:5432', env='POSTGRES_HOST')
-    POSTGRES_USER: str = Field('postgres', env='POSTGRES_USER')
-    POSTGRES_PASSWORD: str = Field('postgres', env='POSTGRES_PASSWORD')
-    POSTGRES_DB: str = Field('auth', env='POSTGRES_DB')
+    POSTGRES_HOST: str = "postgres"
+    POSTGRES_USER: str = "postgres"
+    POSTGRES_PASSWORD: str = "postgres"
+    POSTGRES_DB: str = "auth"
 
     @property
     def url(self) -> str:
-        return 'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}'.format_map(
-            self.dict()
-        )
+        return "postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}".format_map(self.dict())
 
 
 class Settings(BaseSettings):

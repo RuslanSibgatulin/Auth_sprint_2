@@ -1,7 +1,9 @@
 from http import HTTPStatus
 
 from authlib.integrations.flask_client import OAuth
-from flask import Blueprint, current_app as app, request
+from flask import Blueprint
+from flask import current_app as app
+from flask import request
 from flask_jwt_extended import create_access_token, create_refresh_token
 from flask_restful import Api
 
@@ -11,32 +13,30 @@ from db.controllers.users import UserController
 from db.redis import TokenStorage
 from utils import SocialUserPayload
 
-
 oauth = OAuth(app)
 
 oauth_blueprint = Blueprint("oauth", __name__)
 api = Api(oauth_blueprint)
 
 access_data = {
-    'grant_type': 'authorization_code',
-    'client_id': settings.YANDEX_CLIENT_ID,
-    'client_secret': settings.YANDEX_CLIENT_SECRET,
+    "grant_type": "authorization_code",
+    "client_id": settings.YANDEX_CLIENT_ID,
+    "client_secret": settings.YANDEX_CLIENT_SECRET,
 }
 
 oauth.register(
-    'yandex',
+    "yandex",
     client_id=settings.YANDEX_CLIENT_ID,
     client_secret=settings.YANDEX_CLIENT_SECRET,
-    base_url='https://oauth.yandex.ru/',
+    base_url="https://oauth.yandex.ru/",
     access_token_params=access_data,
-    authorize_url='https://oauth.yandex.ru/authorize',
-    access_token_url='https://oauth.yandex.ru/token',
-    userinfo_endpoint='https://login.yandex.ru/info'
+    authorize_url="https://oauth.yandex.ru/authorize",
+    access_token_url="https://oauth.yandex.ru/token",
+    userinfo_endpoint="https://login.yandex.ru/info",
 )
 
 
 class YandexLogin(BaseView):
-
     def get(self, provider: str):
         oauth_provider = oauth.create_client(provider)
         if oauth_provider is None:
@@ -45,14 +45,12 @@ class YandexLogin(BaseView):
 
 
 class YandexCallbackView(BaseView):
-
     def get(self, provider: str):
         oauth_provider = oauth.create_client(provider)
         oauth_provider.authorize_access_token()
         userinfo = oauth_provider.userinfo()
         payload = SocialUserPayload(
-            social_id=userinfo["id"], login=userinfo["login"],
-            email=userinfo["default_email"], social_name=provider
+            social_id=userinfo["id"], login=userinfo["login"], email=userinfo["default_email"], social_name=provider
         )
         controller = UserController()
         user = controller.create_social_user(payload)

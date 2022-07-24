@@ -30,7 +30,7 @@ class UserController:
             db_session.add(account)
             try:
                 db_session.commit()
-            except IntegrityError as e:
+            except IntegrityError:
                 db_session.rollback()
             return old_user
         else:
@@ -44,10 +44,9 @@ class UserController:
             db_session.add(account)
             try:
                 db_session.commit()
-            except IntegrityError as e:
+            except IntegrityError:
                 db_session.rollback()
             return user
-
 
     def update(self, user: User, payload: dict) -> None:
         for key, value in payload.items():

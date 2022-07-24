@@ -20,16 +20,11 @@ app.register_blueprint(role_blueprint)
 app.register_blueprint(user_blueprint)
 
 app.config["SWAGGER"] = {
-    "specs": [
-        {
-            "endpoint": '/apidocs/apispec_1',
-            "route": '/apidocs/apispec_1.json'
-        }
-    ],
+    "specs": [{"endpoint": "/apidocs/apispec_1", "route": "/apidocs/apispec_1.json"}],
     "static_url_path": "/apidocs/flasgger_static",
-    "specs_route": "/apidocs/"
+    "specs_route": "/apidocs/",
 }
-swagger = Swagger(app, template_file='apidocs/swagger.json')
+swagger = Swagger(app, template_file="apidocs/swagger.json")
 
 
 def main():
