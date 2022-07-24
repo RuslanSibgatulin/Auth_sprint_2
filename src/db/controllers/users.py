@@ -2,7 +2,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.query import Query
 
 from db.base import db_session
-from db.models import LoginHistory, User, UserRole
+from db.models import LoginHistory, SocialAccount, User, UserRole
+from utils import PasswordHasher, SocialUserPayload
 
 
 class UserController:
@@ -21,6 +22,32 @@ class UserController:
             db_session.rollback()
             raise e
         db_session.commit()
+
+    def create_social_user(self, payload: SocialUserPayload, role_id: int = None) -> User:
+        old_user = self.MODEL.get_user_by_universal_login(payload.login, payload.email)
+        if old_user:
+            account = SocialAccount(social_id=payload.social_id, social_name=payload.social_name, user=old_user)
+            db_session.add(account)
+            try:
+                db_session.commit()
+            except IntegrityError as e:
+                db_session.rollback()
+            return old_user
+        else:
+            generated_password = PasswordHasher.generate_password()
+            hashed_password = PasswordHasher.hash_password(generated_password)
+            user = self.MODEL(login=payload.login, email=payload.email, password_hash=hashed_password)
+            new_user_role = UserRole(user=user, role_id=role_id or self.DEFAULT_ROLE_ID)
+            account = SocialAccount(social_id=payload.social_id, social_name=payload.social_name, user=user)
+            db_session.add(user)
+            db_session.add(new_user_role)
+            db_session.add(account)
+            try:
+                db_session.commit()
+            except IntegrityError as e:
+                db_session.rollback()
+            return user
+
 
     def update(self, user: User, payload: dict) -> None:
         for key, value in payload.items():

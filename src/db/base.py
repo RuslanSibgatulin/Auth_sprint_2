@@ -2,11 +2,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-from config import Postgres_dsn
+from config import postgres_settings
 
 
 engine = create_engine(
-    Postgres_dsn().url(),
+    postgres_settings.url,
     convert_unicode=True
 )
 db_session = scoped_session(sessionmaker(autocommit=False,

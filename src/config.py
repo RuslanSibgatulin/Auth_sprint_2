@@ -5,14 +5,15 @@ from pydantic import BaseSettings, Field
 BASE_DIR = Path(__file__).parent.resolve()
 
 
-class Postgres_dsn(BaseSettings):
-    host: str = Field('127.0.0.1', env='POSTGRES_HOST')
-    user: str = Field(env='POSTGRES_USER')
-    psw: str = Field(env='POSTGRES_PASSWORD')
-    dbname: str = Field(env='POSTGRES_DB')
+class PostgresDNS(BaseSettings):
+    POSTGRES_HOST: str = Field('127.0.0.1:5432', env='POSTGRES_HOST')
+    POSTGRES_USER: str = Field('postgres', env='POSTGRES_USER')
+    POSTGRES_PASSWORD: str = Field('postgres', env='POSTGRES_PASSWORD')
+    POSTGRES_DB: str = Field('auth', env='POSTGRES_DB')
 
-    def url(self):
-        return 'postgresql://{user}:{psw}@{host}/{dbname}'.format_map(
+    @property
+    def url(self) -> str:
+        return 'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}'.format_map(
             self.dict()
         )
 
@@ -37,3 +38,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+postgres_settings = PostgresDNS()
