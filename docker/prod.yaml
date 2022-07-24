@@ -10,7 +10,7 @@ services:
     healthcheck:
       test: pg_isready -q -U $${POSTGRES_USER}
       interval: 1s
-      timeout: 5s
+      timeout: 3s
       retries: 30
 
   redis:
@@ -26,12 +26,12 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      - app
+      - auth
 
-  app:
+  auth:
     build:
       context: ..
-      dockerfile: docker/dockerfiles/AppDockerfile
+      dockerfile: docker/dockerfiles/AuthDockerfile
       target: prod
     depends_on:
       db:
