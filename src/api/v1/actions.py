@@ -1,11 +1,12 @@
 from http import HTTPStatus
 
-from flask import Blueprint
-from flask_jwt_extended import jwt_required
+from flask import Blueprint, request
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Api
 
 from api.base import BaseView, requires_actions
 from db.controllers.actions import ActionController
+from db.redis import TokenStorage
 from models.actions import Action, ActionCreate
 
 action_blueprint = Blueprint("action", __name__)
@@ -55,4 +56,18 @@ class ActionView(BaseView):
         return {"message": "Action deleted.", "action": Action.from_orm(action).dict()}, HTTPStatus.OK
 
 
+class ActionsCheckView(BaseView):
+    @jwt_required()
+    def get(self):
+        identity = get_jwt_identity()
+        user_id = identity.get("user_id")
+        access_token = self.get_token(request)
+        agent = request.user_agent.string
+        if TokenStorage().is_valid_token(user_id, agent, access_token):
+            return {"actions": identity.get("action_ids")}, HTTPStatus.OK
+        else:
+            return {"message": "Your token has expired"}, HTTPStatus.BAD_REQUEST
+
+
 api.add_resource(ActionView, "/v1/access/action")
+api.add_resource(ActionsCheckView, "/v1/check/action")

@@ -1,12 +1,7 @@
 from http import HTTPStatus
 
 from flask import Blueprint, request
-from flask_jwt_extended import (
-    create_access_token,
-    create_refresh_token,
-    get_jwt_identity,
-    jwt_required,
-)
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Api
 from sqlalchemy.exc import IntegrityError
 
@@ -14,7 +9,7 @@ from api.base import BaseView
 from db.controllers.users import UserController
 from db.redis import TokenStorage
 from models.users import CreateUser
-from utils import CreationError, PasswordHasher
+from utils import CreationError, PasswordHasher, TokenMaker
 
 user_blueprint = Blueprint("user", __name__)
 api = Api(user_blueprint)
@@ -60,9 +55,7 @@ class UserLoginView(BaseView):
         if not correct_password:
             return {"message": "Wrong password"}, HTTPStatus.UNAUTHORIZED
         agent = request.user_agent
-        action_ids = [action.id for user_role in user.roles for action in user_role.role.actions]
-        access_token = create_access_token({"user_id": user.id, "action_ids": action_ids})
-        refresh_token = create_refresh_token({"user_id": user.id})
+        access_token, refresh_token = TokenMaker.create_tokens_pair(user)
         TokenStorage().add_token_pair(
             user_id=user.id, user_agent=agent.string, refresh_token=refresh_token, access_token=access_token
         )
@@ -82,9 +75,7 @@ class UserRefreshView(BaseView):
         agent = request.user_agent.string
         token_storage = TokenStorage()
         if token_storage.is_valid_token(user_id, agent, refresh_token, True):
-            action_ids = [action.id for user_role in user.roles for action in user_role.role.actions]
-            access_token = create_access_token({"user_id": user_id, "action_ids": action_ids})
-            refresh_token = create_refresh_token({"user_id": user_id})
+            access_token, refresh_token = TokenMaker.create_tokens_pair(user)
             token_storage.add_token_pair(
                 user_id=user_id, user_agent=agent, refresh_token=refresh_token, access_token=access_token
             )
