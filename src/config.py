@@ -7,13 +7,17 @@ BASE_DIR = Path(__file__).parent.resolve()
 
 class PostgresDNS(BaseSettings):
     POSTGRES_HOST: str = "postgres"
+    POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "auth"
 
     @property
     def url(self) -> str:
-        return "postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}".format_map(self.dict())
+        return (
+            "postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@"
+            "{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}".format_map(self.dict())
+        )
 
 
 class Settings(BaseSettings):
