@@ -5,7 +5,7 @@ services:
           - db_data_test:/var/lib/postgresql/data
     env_file: envs/test.env
 
-  app:
+  auth:
     env_file: envs/test.env
 
   functional_tests:
