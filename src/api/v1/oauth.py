@@ -4,14 +4,13 @@ from authlib.integrations.flask_client import OAuth
 from flask import Blueprint
 from flask import current_app as app
 from flask import request
-from flask_jwt_extended import create_access_token, create_refresh_token
 from flask_restful import Api
 
 from api.base import BaseView
 from config import settings
 from db.controllers.users import UserController
 from db.redis import TokenStorage
-from utils import SocialUserPayload
+from utils import SocialUserPayload, TokenMaker
 
 oauth = OAuth(app)
 
@@ -55,9 +54,7 @@ class YandexCallbackView(BaseView):
         controller = UserController()
         user = controller.create_social_user(payload)
         agent = request.user_agent
-        action_ids = [action.id for user_role in user.roles for action in user_role.role.actions]
-        access_token = create_access_token({"user_id": user.id, "action_ids": action_ids})
-        refresh_token = create_refresh_token({"user_id": user.id})
+        access_token, refresh_token = TokenMaker.create_tokens_pair(user)
         TokenStorage().add_token_pair(
             user_id=user.id, user_agent=agent.string, refresh_token=refresh_token, access_token=access_token
         )
