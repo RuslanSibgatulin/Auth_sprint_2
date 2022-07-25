@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS role_action
 -- User
 INSERT INTO role_action (role_id, action_id) VALUES (1, 11);
 INSERT INTO role_action (role_id, action_id) VALUES (1, 12);
-INSERT INTO role_action (role_id, action_id) VALUES (1, 13);
+INSERT INTO role_action (role_id, action_id) VALUES (1, 14);
 -- Premium User
 INSERT INTO role_action (role_id, action_id) VALUES (2, 11);
 INSERT INTO role_action (role_id, action_id) VALUES (2, 12);
