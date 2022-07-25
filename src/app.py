@@ -25,11 +25,3 @@ app.config["SWAGGER"] = {
     "specs_route": "/apidocs/",
 }
 swagger = Swagger(app, template_file="apidocs/swagger.json")
-
-
-def main():
-    app.run(debug=True, port=8000)
-
-
-if __name__ == "__main__":
-    main()
