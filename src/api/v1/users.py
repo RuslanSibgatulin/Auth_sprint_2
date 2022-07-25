@@ -24,46 +24,6 @@ class UserCreationView(BaseView):
     FIELDS = ["login", "email", "password", "second_password"]
 
     def post(self):
-        """Register a new user.
-        ---
-        tags:
-          - user
-        parameters:
-          - name: user
-            in: body
-            required: true
-            schema:
-              type: object
-              properties:
-                login:
-                  type: string
-                email:
-                  type: string
-                password:
-                  type: string
-                second_password:
-                  type: string
-        definitions:
-          Message:
-            type: object
-            properties:
-              message:
-                type: string
-        responses:
-          200:
-            description: User registered
-            schema:
-              $ref: '#/definitions/Message'
-          400:
-            description: Wrong credentials
-            schema:
-              $ref: '#/definitions/Message'
-
-          401:
-            description: Unauthorized
-            schema:
-              $ref: '#/definitions/Message'
-        """
         request_args = self.PARSER.parse_args()
         try:
             user = CreateUser.parse_obj(request_args)
@@ -90,50 +50,6 @@ class UserLoginView(BaseView):
     FIELDS = ["login", "password"]
 
     def post(self):
-        """Login.
-        ---
-        tags:
-          - user
-        parameters:
-          - name: user
-            in: body
-            required: true
-            schema:
-              type: object
-              properties:
-                login:
-                  type: string
-                password:
-                  type: string
-        definitions:
-          Message:
-            type: object
-            properties:
-              message:
-                type: string
-        responses:
-          200:
-            description: User logined
-            schema:
-              type: object
-              properties:
-                access_token:
-                  type: string
-                refresh_token:
-                  type: string
-          400:
-            description: Wrong credentials
-            schema:
-              $ref: '#/definitions/Message'
-          401:
-            description: Unauthorized
-            schema:
-              $ref: '#/definitions/Message'
-          404:
-            description: Not found
-            schema:
-              $ref: '#/definitions/Message'
-        """
         request_args = self.PARSER.parse_args()
         login = request_args.get("login")
         controller = UserController()
@@ -157,41 +73,6 @@ class UserLoginView(BaseView):
 class UserRefreshView(BaseView):
     @jwt_required(refresh=True)
     def post(self):
-        """Get new session and refresh tokens.
-        ---
-        tags:
-          - user
-        definitions:
-          Message:
-            type: object
-            properties:
-              message:
-                type: string
-        security:
-          - bearerAuth: []
-        responses:
-          200:
-            description: New tokens generated
-            schema:
-              type: object
-              properties:
-                access_token:
-                  type: string
-                refresh_token:
-                  type: string
-          400:
-            description: Wrong credentials
-            schema:
-              $ref: '#/definitions/Message'
-          401:
-            description: Unauthorized
-            schema:
-              $ref: '#/definitions/Message'
-          404:
-            description: Not found
-            schema:
-              $ref: '#/definitions/Message'
-        """
         identity = get_jwt_identity()
         user_id = identity.get("user_id")
         refresh_token = self.get_token(request)
@@ -217,51 +98,6 @@ class UserHistoryView(BaseView):
 
     @jwt_required()
     def get(self):
-        """Get login history.
-        ---
-        tags:
-          - user
-        parameters:
-          - name: page
-            in: query
-            type: int
-            required: false
-            default: 1
-          - name: limit
-            in: query
-            type: int
-            required: false
-            default: 10
-        definitions:
-          LoginHistory:
-            type: object
-            properties:
-              id:
-                type: integer
-              user_id:
-                type: string
-              platform:
-                type: string
-              login_at:
-                type: string
-              ip:
-                type: string
-        security:
-          - bearerAuth: []
-        responses:
-          200:
-            description: Historu returned
-            schema:
-              $ref: '#/definitions/LoginHistory'
-          400:
-            description: Wrong credentials
-            schema:
-              $ref: '#/definitions/Message'
-          401:
-            description: Unauthorized
-            schema:
-              $ref: '#/definitions/Message'
-        """
         identity = get_jwt_identity()
         user_id = identity.get("user_id")
         access_token = self.get_token(request)
@@ -282,26 +118,6 @@ class UserHistoryView(BaseView):
 class UserLogoutView(BaseView):
     @jwt_required()
     def post(self):
-        """Logout.
-        ---
-        tags:
-          - user
-        security:
-          - bearerAuth: []
-        responses:
-          200:
-            description: Log out
-            schema:
-              $ref: '#/definitions/Message'
-          400:
-            description: Wrong credentials
-            schema:
-              $ref: '#/definitions/Message'
-          401:
-            description: Unauthorized
-            schema:
-              $ref: '#/definitions/Message'
-        """
         identity = get_jwt_identity()
         user_id = identity.get("user_id")
         agent = request.user_agent.string
@@ -316,26 +132,6 @@ class UserLogoutView(BaseView):
 class UserLogoutAllView(BaseView):
     @jwt_required()
     def post(self):
-        """Logout.
-        ---
-        tags:
-          - user
-        security:
-          - bearerAuth: []
-        responses:
-          200:
-            description: Log out
-            schema:
-              $ref: '#/definitions/Message'
-          400:
-            description: Wrong credentials
-            schema:
-              $ref: '#/definitions/Message'
-          401:
-            description: Unauthorized
-            schema:
-              $ref: '#/definitions/Message'
-        """
         identity = get_jwt_identity()
         user_id = identity.get("user_id")
         access_token = self.get_token(request)
@@ -352,41 +148,6 @@ class UserChangeView(BaseView):
 
     @jwt_required()
     def put(self):
-        """Update user data.
-        ---
-        tags:
-          - user
-        parameters:
-          - name: login
-            in: query
-            type: string
-          - name: password
-            in: query
-            type: string
-          - name: second_password
-            in: query
-            type: string
-        definitions:
-          Message:
-            type: object
-            properties:
-              message:
-                type: string
-        responses:
-          200:
-            description: User data updated
-            schema:
-              $ref: '#/definitions/Message'
-          400:
-            description: Wrong credentials
-            schema:
-              $ref: '#/definitions/Message'
-
-          401:
-            description: Unauthorized
-            schema:
-              $ref: '#/definitions/Message'
-        """
         identity = get_jwt_identity()
         user_id = identity.get("user_id")
         token_storage = TokenStorage()
