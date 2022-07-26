@@ -7,13 +7,17 @@ BASE_DIR = Path(__file__).parent.resolve()
 
 class PostgresDNS(BaseSettings):
     POSTGRES_HOST: str = "postgres"
+    POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "auth"
 
     @property
     def url(self) -> str:
-        return "postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}".format_map(self.dict())
+        return (
+            "postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@"
+            "{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}".format_map(self.dict())
+        )
 
 
 class Settings(BaseSettings):
@@ -33,6 +37,10 @@ class Settings(BaseSettings):
     YANDEX_CLIENT_ID: str = "925a2a14c8a54953b6bc2e92433d33bc"
     YANDEX_CLIENT_SECRET: str = "dc28bcd4f66945af87d167669917ef6a"
     YANDEX_REDIRECT_URL = "http://127.0.0.1:8000/v1/oauth/callback/yandex"
+
+    @property
+    def redis_uri(self) -> str:
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
 
 
 settings = Settings()

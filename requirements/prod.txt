@@ -1,12 +1,14 @@
 authlib==1.0.1
 email-validate==1.1.2
-gevent==21.12.0
 flasgger==0.9.5
 flask==2.0.2
 flask-jwt-extended==4.3.1
+Flask-Limiter==2.5.0
 flask-restful==0.3.9
+gevent==21.12.0
 psycopg2==2.9.3
 pydantic==1.9.0
 redispy==3.0.0
+requests==2.28.1
 sqlalchemy==1.4.29
 uWSGI==2.0.20

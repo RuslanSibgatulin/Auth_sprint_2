@@ -43,12 +43,15 @@ CREATE TABLE IF NOT EXISTS role_action
     PRIMARY KEY (role_id, action_id)
 );
 -- User
-INSERT INTO role_action (role_id, action_id) 
-SELECT 1, i FROM generate_series(11, 13) AS i;
+INSERT INTO role_action (role_id, action_id) VALUES (1, 11);
+INSERT INTO role_action (role_id, action_id) VALUES (1, 12);
+INSERT INTO role_action (role_id, action_id) VALUES (1, 14);
 
 -- Premium User
-INSERT INTO role_action (role_id, action_id) 
-SELECT 2, i FROM generate_series(11, 15) AS i;
+INSERT INTO role_action (role_id, action_id) VALUES (2, 11);
+INSERT INTO role_action (role_id, action_id) VALUES (2, 12);
+INSERT INTO role_action (role_id, action_id) VALUES (2, 14);
+INSERT INTO role_action (role_id, action_id) VALUES (2, 15);
 
 -- Moderator
 INSERT INTO role_action (role_id, action_id) 
