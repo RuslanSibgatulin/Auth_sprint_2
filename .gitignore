@@ -146,5 +146,4 @@ cython_debug/
 
 # PyCharm
 .idea/
-dev.env
-*.env
+docker/envs/*.env

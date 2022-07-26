@@ -2,9 +2,18 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import (Boolean, Column, DateTime, ForeignKey,
-                        Integer, String, Table, Text, UniqueConstraint)
-from sqlalchemy import or_
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Table,
+    Text,
+    UniqueConstraint,
+    or_,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import backref, relationship
 
@@ -80,15 +89,15 @@ class Action(Base):
 
 
 class SocialAccount(Base):
-    __tablename__ = 'social_account'
+    __tablename__ = "social_account"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
-    user_id = Column(UUID(as_uuid=True), ForeignKey('user.id'), nullable=False)
-    user = relationship(User, backref=backref('social_accounts', lazy=True))
+    user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"), nullable=False)
+    user = relationship(User, backref=backref("social_accounts", lazy=True))
     social_id = Column(Text, nullable=False)
     social_name = Column(Text, nullable=False)
 
-    __table_args__ = (UniqueConstraint('social_id', 'social_name', name='social_pk'),)
+    __table_args__ = (UniqueConstraint("social_id", "social_name", name="social_pk"),)
 
     def __repr__(self):
-        return f'<SocialAccount {self.social_name}:{self.user_id}>'
+        return f"<SocialAccount {self.social_name}:{self.user_id}>"

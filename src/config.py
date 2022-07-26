@@ -1,19 +1,22 @@
 from pathlib import Path
 
-from pydantic import BaseSettings, Field
+from pydantic import BaseSettings
 
 BASE_DIR = Path(__file__).parent.resolve()
 
 
-class Postgres_dsn(BaseSettings):
-    host: str = Field('127.0.0.1', env='POSTGRES_HOST')
-    user: str = Field(env='POSTGRES_USER')
-    psw: str = Field(env='POSTGRES_PASSWORD')
-    dbname: str = Field(env='POSTGRES_DB')
+class PostgresDNS(BaseSettings):
+    POSTGRES_HOST: str = "postgres"
+    POSTGRES_PORT: int = 5432
+    POSTGRES_USER: str = "postgres"
+    POSTGRES_PASSWORD: str = "postgres"
+    POSTGRES_DB: str = "auth"
 
-    def url(self):
-        return 'postgresql://{user}:{psw}@{host}/{dbname}'.format_map(
-            self.dict()
+    @property
+    def url(self) -> str:
+        return (
+            "postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@"
+            "{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}".format_map(self.dict())
         )
 
 
@@ -37,5 +40,10 @@ class Settings(BaseSettings):
     JAEGER_HOST: str = "127.0.0.1"
     JAEGER_PORT: int = 6831
 
+    @property
+    def redis_uri(self) -> str:
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
+
 
 settings = Settings()
+postgres_settings = PostgresDNS()
