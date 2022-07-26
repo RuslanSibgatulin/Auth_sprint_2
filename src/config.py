@@ -37,6 +37,8 @@ class Settings(BaseSettings):
     YANDEX_CLIENT_ID: str = "925a2a14c8a54953b6bc2e92433d33bc"
     YANDEX_CLIENT_SECRET: str = "dc28bcd4f66945af87d167669917ef6a"
     YANDEX_REDIRECT_URL = "http://127.0.0.1:8000/v1/oauth/callback/yandex"
+    JAEGER_HOST: str = "127.0.0.1"
+    JAEGER_PORT: int = 6831
 
     @property
     def redis_uri(self) -> str:
