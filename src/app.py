@@ -15,9 +15,7 @@ app = Flask(__name__)
 app.config.from_object(settings)
 api = Api(app=app)
 jwt = JWTManager(app)
-limiter = Limiter(
-    app, key_func=get_remote_address, default_limits=["200 per day", "10 per hour"], storage_uri=settings.redis_uri
-)
+limiter = Limiter(app, key_func=get_remote_address, default_limits=settings.limits, storage_uri=settings.redis_uri)
 app.register_blueprint(action_blueprint)
 app.register_blueprint(oauth_blueprint)
 app.register_blueprint(role_blueprint)

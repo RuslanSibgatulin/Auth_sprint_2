@@ -36,11 +36,17 @@ class Settings(BaseSettings):
     REDIS_PREFIX: str = "auth"
     YANDEX_CLIENT_ID: str = "925a2a14c8a54953b6bc2e92433d33bc"
     YANDEX_CLIENT_SECRET: str = "dc28bcd4f66945af87d167669917ef6a"
-    YANDEX_REDIRECT_URL = "http://127.0.0.1:8000/v1/oauth/callback/yandex"
+    YANDEX_REDIRECT_URL: str = "http://127.0.0.1:8000/v1/oauth/callback/yandex"
+    DAYS_LIMIT: str = "200 per day"
+    HOURS_LIMIT: str = "10 per hour"
 
     @property
     def redis_uri(self) -> str:
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
+
+    @property
+    def limits(self) -> list[str]:
+        return [self.DAYS_LIMIT, self.HOURS_LIMIT]
 
 
 settings = Settings()
