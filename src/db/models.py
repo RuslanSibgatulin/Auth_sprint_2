@@ -2,18 +2,10 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import (
-    Boolean,
-    Column,
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-    Table,
-    Text,
-    UniqueConstraint,
-    or_,
-)
+from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Integer,
+                        PrimaryKeyConstraint, String, Table, Text,
+                        UniqueConstraint, or_)
+
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import backref, relationship
 
@@ -72,8 +64,11 @@ class UserRole(Base):
 
 class LoginHistory(Base):
     __tablename__ = "login_history"
+    __table_args__ = (
+        PrimaryKeyConstraint('user_id', 'login_at'),
+    )
 
-    id = Column(Integer, primary_key=True, unique=True)
+    # id = Column(Integer, primary_key=True, unique=True)
     user_id = Column("user_id", UUID(as_uuid=True), ForeignKey("user.id"))
     platform = Column(String(100))
     login_at = Column(DateTime, default=datetime.utcnow, nullable=False)

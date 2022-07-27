@@ -39,6 +39,8 @@ class Settings(BaseSettings):
     YANDEX_REDIRECT_URL: str = "http://127.0.0.1:8000/v1/oauth/callback/yandex"
     DAYS_LIMIT: str = "200 per day"
     HOURS_LIMIT: str = "10 per hour"
+    JAEGER_HOST: str = "127.0.0.1"
+    JAEGER_PORT: int = 6831
 
     @property
     def redis_uri(self) -> str:

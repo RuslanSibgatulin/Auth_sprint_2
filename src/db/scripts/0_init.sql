@@ -46,48 +46,26 @@ CREATE TABLE IF NOT EXISTS role_action
 INSERT INTO role_action (role_id, action_id) VALUES (1, 11);
 INSERT INTO role_action (role_id, action_id) VALUES (1, 12);
 INSERT INTO role_action (role_id, action_id) VALUES (1, 14);
+
 -- Premium User
 INSERT INTO role_action (role_id, action_id) VALUES (2, 11);
 INSERT INTO role_action (role_id, action_id) VALUES (2, 12);
 INSERT INTO role_action (role_id, action_id) VALUES (2, 14);
 INSERT INTO role_action (role_id, action_id) VALUES (2, 15);
+
 -- Moderator
-INSERT INTO role_action (role_id, action_id) VALUES (3, 5);
-INSERT INTO role_action (role_id, action_id) VALUES (3, 6);
-INSERT INTO role_action (role_id, action_id) VALUES (3, 11);
-INSERT INTO role_action (role_id, action_id) VALUES (3, 12);
-INSERT INTO role_action (role_id, action_id) VALUES (3, 13);
-INSERT INTO role_action (role_id, action_id) VALUES (3, 14);
-INSERT INTO role_action (role_id, action_id) VALUES (3, 15);
+INSERT INTO role_action (role_id, action_id) 
+SELECT 3, i FROM generate_series(5, 6) AS i;
+INSERT INTO role_action (role_id, action_id) 
+SELECT 3, i FROM generate_series(11, 15) AS i;
+
 -- Admin
-INSERT INTO role_action (role_id, action_id) VALUES (4, 5);
-INSERT INTO role_action (role_id, action_id) VALUES (4, 6);
-INSERT INTO role_action (role_id, action_id) VALUES (4, 7);
-INSERT INTO role_action (role_id, action_id) VALUES (4, 8);
-INSERT INTO role_action (role_id, action_id) VALUES (4, 9);
-INSERT INTO role_action (role_id, action_id) VALUES (4, 10);
-INSERT INTO role_action (role_id, action_id) VALUES (4, 11);
-INSERT INTO role_action (role_id, action_id) VALUES (4, 12);
-INSERT INTO role_action (role_id, action_id) VALUES (4, 13);
-INSERT INTO role_action (role_id, action_id) VALUES (4, 14);
-INSERT INTO role_action (role_id, action_id) VALUES (4, 15);
+INSERT INTO role_action (role_id, action_id) 
+SELECT 4, i FROM generate_series(5, 15) AS i;
 
 --Superuser
-INSERT INTO role_action (role_id, action_id) VALUES (5, 1);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 2);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 3);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 4);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 5);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 6);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 7);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 8);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 9);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 10);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 11);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 12);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 13);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 14);
-INSERT INTO role_action (role_id, action_id) VALUES (5, 15);
+INSERT INTO role_action (role_id, action_id) 
+SELECT 5, i FROM generate_series(1, 15) AS i;
 
 CREATE TABLE IF NOT EXISTS "user"
 (
@@ -109,12 +87,29 @@ CREATE TABLE IF NOT EXISTS user_role
 
 CREATE TABLE IF NOT EXISTS login_history
 (
-    id           SERIAL PRIMARY KEY,
-    user_id      UUID,
+    user_id      UUID REFERENCES "user" (id),
     platform     VARCHAR(100),
     ip           VARCHAR(100),
     login_at     TIMESTAMP NOT NULL DEFAULT NOW()
-);
+) PARTITION BY HASH (user_id);
+
+-- Create partitions for table login_history
+CREATE TABLE IF NOT EXISTS login_history_hash1 PARTITION OF login_history
+(
+    CONSTRAINT pk_login_history1 PRIMARY KEY(user_id, login_at)
+) FOR VALUES WITH (MODULUS 4, REMAINDER 0);
+CREATE TABLE IF NOT EXISTS login_history_hash2 PARTITION OF login_history
+(
+    CONSTRAINT pk_login_history2 PRIMARY KEY(user_id, login_at)
+) FOR VALUES WITH (MODULUS 4, REMAINDER 1);
+CREATE TABLE IF NOT EXISTS login_history_hash3 PARTITION OF login_history
+(
+    CONSTRAINT pk_login_history3 PRIMARY KEY(user_id, login_at)
+) FOR VALUES WITH (MODULUS 4, REMAINDER 2);
+CREATE TABLE IF NOT EXISTS login_history_hash4 PARTITION OF login_history
+(
+    CONSTRAINT pk_login_history4 PRIMARY KEY(user_id, login_at)
+) FOR VALUES WITH (MODULUS 4, REMAINDER 3);
 
 CREATE TABLE IF NOT EXISTS social_account
 (
