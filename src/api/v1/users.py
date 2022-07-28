@@ -85,8 +85,6 @@ class UserRefreshView(BaseView):
 
 
 class UserHistoryView(BaseView):
-    FIELDS = ["page", "limit"]
-
     @jwt_required()
     def get(self):
         identity = get_jwt_identity()
@@ -95,9 +93,8 @@ class UserHistoryView(BaseView):
         token_storage = TokenStorage()
         agent = request.user_agent.string
         if token_storage.is_valid_token(user_id, agent, access_token):
-            request_args = self.PARSER.parse_args()
-            page = request_args.get("page") or 1
-            limit = request_args.get("limit") or 10
+            page = request.args.get("page") or 1
+            limit = request.args.get("limit") or 10
             skip = (int(page) - 1) * int(limit)
             controller = UserController()
             logins = controller.get_user_history(user_id, skip=skip, limit=int(limit))

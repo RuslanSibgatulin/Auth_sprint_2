@@ -10,5 +10,3 @@ RUN --mount=type=cache,target=/root/.cache \
     pip install -r /tmp/requirements/tests.txt
 
 WORKDIR /tests
-
-# CMD ["pytest", "-vv", "functional"]

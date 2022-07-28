@@ -10,8 +10,22 @@ import requests
         ("user1", "email1@email.email", "1322", "1322", "User created.", HTTPStatus.CREATED),
         ("user3", "email3@email.ru", "1322", "13222", "Error! Check your passwords.", HTTPStatus.BAD_REQUEST),
         ("user2", "email2@email.ru", "1322", "1322", "User created.", HTTPStatus.CREATED),
-        ("user2", "email3@email.ru", "1322", "1322", "Error! User with login - user2 already exists.", HTTPStatus.BAD_REQUEST),
-        ("user3", "email2@email.ru", "1322", "1322", "Error! User with email - email2@email.ru already exists.", HTTPStatus.BAD_REQUEST),
+        (
+            "user2",
+            "email3@email.ru",
+            "1322",
+            "1322",
+            "Error! User with login - user2 already exists.",
+            HTTPStatus.BAD_REQUEST,
+        ),
+        (
+            "user3",
+            "email2@email.ru",
+            "1322",
+            "1322",
+            "Error! User with email - email2@email.ru already exists.",
+            HTTPStatus.BAD_REQUEST,
+        ),
     ],
 )
 @pytest.mark.parametrize("url_base", ["v1"], indirect=True)
@@ -88,7 +102,6 @@ def test_get_login_hisory(url_base: str, user_token_pair):
     response = requests.get(
         url_base + "history", headers={"User-Agent": "User Agent 1.0", "Authorization": f"Bearer {access_token}"}
     )
-    print(response.url, response.text, response.json())
     assert response.status_code == HTTPStatus.OK
     assert len(response.json()["logins"]) == 3
 
