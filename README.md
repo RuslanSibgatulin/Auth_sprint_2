@@ -17,20 +17,9 @@
 ## Клонировать репозиторий
     git clone https://github.com/Riyce/Auth_sprint_2.git
 
-## Подготовить .env файл с переменными окружения
-TODO: Актуализировать под текущий проект
-    POSTGRES_USER=auth_user
-    POSTGRES_PASSWORD=secret
-    POSTGRES_DB=auth_db
-    POSTGRES_HOST=postgres
-
-    REDIS_HOST=redis
-    FLASK_APP=app flask run --with-threads
-
-    #JTW config
-    SECRET_KEY=secretkeysecretkey
-    ACCESS_TOKEN_EXPIRES_MINUTES=30
-    REFRESH_TOKEN_EXPIRES_DAYS=30
+## Подготовка окружения
+Подготовить .env файл с переменными окружения по шаблону docker/envs/example.sample и сохранить под именем docker/envs/prod.env.
+Для среды разработи создать файл docker/envs/dev.env, для тестов docker/envs/test.env
 
 ## Запуск компонентов системы
 Перейти в каталог `docker`
