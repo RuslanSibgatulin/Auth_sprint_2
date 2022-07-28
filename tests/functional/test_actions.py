@@ -37,3 +37,10 @@ def test_existing_action_deletion(root_auth_headers: dict[str, str], url_base: s
 def test_missing_action_deletion(root_auth_headers: dict[str, str], url_base: str):
     response = requests.delete(url_base + "access/action", headers=root_auth_headers, json={"id": -1})
     assert response.status_code == HTTPStatus.NOT_FOUND
+
+
+@pytest.mark.parametrize("url_base", ["v1"], indirect=True)
+def test_get_user_actions(root_auth_headers: dict[str, str], url_base: str):
+    response = requests.get(url_base + "check/action", headers=root_auth_headers)
+    assert response.status_code == HTTPStatus.OK
+    assert response.json()["actions"] == [num for num in range(1, 16)]
