@@ -18,6 +18,9 @@ services:
     env_file: envs/test.env
     volumes:
       - ../tests/functional:/tests/functional:ro
+      - ../tests/test_result:/tests/result
+    entrypoint: >
+      sh -c "pytest functional/. -v --html=result/report.html --self-contained-html > result/tests_result.txt"
 
 
 volumes:

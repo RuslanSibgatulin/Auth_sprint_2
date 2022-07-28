@@ -11,4 +11,4 @@ RUN --mount=type=cache,target=/root/.cache \
 
 WORKDIR /tests
 
-CMD ["pytest", "-vv", "functional"]
+# CMD ["pytest", "-vv", "functional"]

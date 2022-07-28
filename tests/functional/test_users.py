@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import pytest
 import requests
 
@@ -5,11 +7,11 @@ import requests
 @pytest.mark.parametrize(
     "login,email,password,second_password,message,code",
     [
-        ("user1", "email1@email.email", "1322", "1322", "User created.", 201),
-        ("user3", "email3@email.ru", "1322", "13222", "Error! Check your passwords.", 400),
-        ("user2", "email2@email.ru", "1322", "1322", "User created.", 201),
-        ("user2", "email3@email.ru", "1322", "1322", "Error! User with login - user2 already exists.", 400),
-        ("user3", "email2@email.ru", "1322", "1322", "Error! User with email - email2@email.ru already exists.", 400),
+        ("user1", "email1@email.email", "1322", "1322", "User created.", HTTPStatus.CREATED),
+        ("user3", "email3@email.ru", "1322", "13222", "Error! Check your passwords.", HTTPStatus.BAD_REQUEST),
+        ("user2", "email2@email.ru", "1322", "1322", "User created.", HTTPStatus.CREATED),
+        ("user2", "email3@email.ru", "1322", "1322", "Error! User with login - user2 already exists.", HTTPStatus.BAD_REQUEST),
+        ("user3", "email2@email.ru", "1322", "1322", "Error! User with email - email2@email.ru already exists.", HTTPStatus.BAD_REQUEST),
     ],
 )
 @pytest.mark.parametrize("url_base", ["v1"], indirect=True)
@@ -27,9 +29,9 @@ def test_create_users(
 @pytest.mark.parametrize(
     "login,password,message,code",
     [
-        ("user2", "13222", "Wrong password", 401),
-        ("user10", "1322", "User with login user10 does't exists.", 404),
-        ("user2", "1322", None, 200),
+        ("user2", "13222", "Wrong password", HTTPStatus.UNAUTHORIZED),
+        ("user10", "1322", "User with login user10 does't exists.", HTTPStatus.NOT_FOUND),
+        ("user2", "1322", None, HTTPStatus.OK),
     ],
 )
 @pytest.mark.parametrize("url_base", ["v1"], indirect=True)
@@ -65,7 +67,7 @@ def test_refresh_view(user_token_pair, url_base: str, login: str, password: str,
     response = requests.post(
         url_base + "refresh", headers={"User-Agent": agent, "Authorization": f"Bearer {refresh_token}"}
     )
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     token_pair = response.json()
     assert len(token_pair) == 2
     refresh_token_new = token_pair.get("refresh_token")
@@ -75,7 +77,7 @@ def test_refresh_view(user_token_pair, url_base: str, login: str, password: str,
     fake_response = requests.post(
         url_base + "refresh", headers={"User-Agent": "Fake Agent 1.0", "Authorization": f"Bearer {refresh_token_new}"}
     )
-    assert fake_response.status_code == 400
+    assert fake_response.status_code == HTTPStatus.BAD_REQUEST
     assert fake_response.json()["message"] == "Refresh token has expired. Login again."
 
 
@@ -86,7 +88,7 @@ def test_get_login_hisory(url_base: str, user_token_pair):
     response = requests.get(
         url_base + "history", headers={"User-Agent": "User Agent 1.0", "Authorization": f"Bearer {access_token}"}
     )
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert len(response.json()["logins"]) == 3
 
 
@@ -101,34 +103,34 @@ def test_user_logout(url_base: str, user_token_pair):
     response_logout = requests.post(
         url_base + "logout", headers={"User-Agent": "User Agent 1.0", "Authorization": f"Bearer {access_token_first}"}
     )
-    assert response_logout.status_code == 200
+    assert response_logout.status_code == HTTPStatus.OK
     assert response_logout.json()["message"] == "You logged out."
 
     response_refresh_first = requests.post(
         url_base + "refresh",
         headers={"User-Agent": "User Agent 1.0", "Authorization": f"Bearer {refresh_token_first}"},
     )
-    assert response_refresh_first.status_code == 400
+    assert response_refresh_first.status_code == HTTPStatus.BAD_REQUEST
     assert response_refresh_first.json()["message"] == "Refresh token has expired. Login again."
 
     response_history_first = requests.get(
         url_base + "history", headers={"User-Agent": "User Agent 1.0", "Authorization": f"Bearer {access_token_first}"}
     )
-    assert response_history_first.status_code == 400
+    assert response_history_first.status_code == HTTPStatus.BAD_REQUEST
     assert response_history_first.json()["message"] == "Refresh your access token."
 
     response_history_second = requests.get(
         url_base + "history",
         headers={"User-Agent": "User Agent 2.0", "Authorization": f"Bearer {access_token_second}"},
     )
-    assert response_history_second.status_code == 200
+    assert response_history_second.status_code == HTTPStatus.OK
     assert len(response_history_second.json()["logins"]) == 5
 
     response_refresh_second = requests.post(
         url_base + "refresh",
         headers={"User-Agent": "User Agent 2.0", "Authorization": f"Bearer {refresh_token_second}"},
     )
-    assert response_refresh_second.status_code == 200
+    assert response_refresh_second.status_code == HTTPStatus.OK
     assert len(response_refresh_second.json()) == 2
     resp_data = response_refresh_second.json()
     assert bool("access_token" in resp_data) is True
@@ -147,34 +149,34 @@ def test_user_logout_all(url_base: str, user_token_pair):
         url_base + "logout-all",
         headers={"User-Agent": "User Agent 1.0", "Authorization": f"Bearer {access_token_first}"},
     )
-    assert response_logout.status_code == 200
+    assert response_logout.status_code == HTTPStatus.OK
     assert response_logout.json()["message"] == "You logged out."
 
     response_history_first = requests.get(
         url_base + "history", headers={"User-Agent": "User Agent 1.0", "Authorization": f"Bearer {access_token_first}"}
     )
-    assert response_history_first.status_code == 400
+    assert response_history_first.status_code == HTTPStatus.BAD_REQUEST
     assert response_history_first.json()["message"] == "Refresh your access token."
 
     response_refresh_first = requests.post(
         url_base + "refresh",
         headers={"User-Agent": "User Agent 1.0", "Authorization": f"Bearer {refresh_token_first}"},
     )
-    assert response_refresh_first.status_code == 400
+    assert response_refresh_first.status_code == HTTPStatus.BAD_REQUEST
     assert response_refresh_first.json()["message"] == "Refresh token has expired. Login again."
 
     response_history_second = requests.get(
         url_base + "history",
         headers={"User-Agent": "User Agent 2.0", "Authorization": f"Bearer {access_token_second}"},
     )
-    assert response_history_second.status_code == 400
+    assert response_history_second.status_code == HTTPStatus.BAD_REQUEST
     assert response_history_first.json()["message"] == "Refresh your access token."
 
     response_refresh_second = requests.post(
         url_base + "refresh",
         headers={"User-Agent": "User Agent 2.0", "Authorization": f"Bearer {refresh_token_second}"},
     )
-    assert response_refresh_second.status_code == 400
+    assert response_refresh_second.status_code == HTTPStatus.BAD_REQUEST
     assert response_refresh_second.json()["message"] == "Refresh token has expired. Login again."
 
 
@@ -196,8 +198,8 @@ def test_user_two_sessions(url_base: str, user_token_pair):
             "Authorization": f"Bearer {token_pair_second.json()['refresh_token']}",
         },
     )
-    assert response_refresh_first.status_code == 200
-    assert response_refresh_second.status_code == 200
+    assert response_refresh_first.status_code == HTTPStatus.OK
+    assert response_refresh_second.status_code == HTTPStatus.OK
     assert len(response_refresh_first.json()) == 2
     assert len(response_refresh_second.json()) == 2
     assert bool("refresh_token" in response_refresh_first.json()) is True
@@ -214,8 +216,8 @@ def test_user_two_sessions(url_base: str, user_token_pair):
         url_base + "history",
         headers={"User-Agent": "User Agent 2.0", "Authorization": f"Bearer {new_access_token_second}"},
     )
-    assert response_history_first.status_code == 200
-    assert response_history_second.status_code == 200
+    assert response_history_first.status_code == HTTPStatus.OK
+    assert response_history_second.status_code == HTTPStatus.OK
     assert len(response_history_first.json()["logins"]) == 9
     assert len(response_history_second.json()["logins"]) == 9
 
@@ -223,9 +225,9 @@ def test_user_two_sessions(url_base: str, user_token_pair):
 @pytest.mark.parametrize(
     "login,password,new_login,new_password,code,message",
     [
-        ("user1", "132222", "user10", "132222", 400, "Wrong old password."),
-        ("user1", "1322", "user2", "132222", 400, "User with login user2 already exists."),
-        ("user1", "1322", "user10", "132222", 200, "Your profile updated."),
+        ("user1", "132222", "user10", "132222", HTTPStatus.BAD_REQUEST, "Wrong old password."),
+        ("user1", "1322", "user2", "132222", HTTPStatus.BAD_REQUEST, "User with login user2 already exists."),
+        ("user1", "1322", "user10", "132222", HTTPStatus.OK, "Your profile updated."),
     ],
 )
 @pytest.mark.parametrize("url_base", ["v1"], indirect=True)
@@ -248,9 +250,9 @@ def test_change_user(
     )
     assert response.status_code == code
     assert response.json()["message"] == message
-    if code == 200:
+    if code == HTTPStatus.OK:
         token_pair = user_token_pair(new_login, new_password, "User Agent 1.0")
-        assert token_pair.status_code == 200
+        assert token_pair.status_code == HTTPStatus.OK
         assert len(token_pair.json()) == 2
         tokens = token_pair.json()
         assert bool("access_token" in tokens) is True
