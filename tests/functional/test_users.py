@@ -88,6 +88,7 @@ def test_get_login_hisory(url_base: str, user_token_pair):
     response = requests.get(
         url_base + "history", headers={"User-Agent": "User Agent 1.0", "Authorization": f"Bearer {access_token}"}
     )
+    print(response.url, response.text, response.json())
     assert response.status_code == HTTPStatus.OK
     assert len(response.json()["logins"]) == 3
 
@@ -123,6 +124,7 @@ def test_user_logout(url_base: str, user_token_pair):
         url_base + "history",
         headers={"User-Agent": "User Agent 2.0", "Authorization": f"Bearer {access_token_second}"},
     )
+    print(response_history_second.json())
     assert response_history_second.status_code == HTTPStatus.OK
     assert len(response_history_second.json()["logins"]) == 5
 
@@ -212,10 +214,12 @@ def test_user_two_sessions(url_base: str, user_token_pair):
         url_base + "history",
         headers={"User-Agent": "User Agent 1.0", "Authorization": f"Bearer {new_access_token_first}"},
     )
+    print(response_history_first.json())
     response_history_second = requests.get(
         url_base + "history",
         headers={"User-Agent": "User Agent 2.0", "Authorization": f"Bearer {new_access_token_second}"},
     )
+    print(response_history_second.json())
     assert response_history_first.status_code == HTTPStatus.OK
     assert response_history_second.status_code == HTTPStatus.OK
     assert len(response_history_first.json()["logins"]) == 9

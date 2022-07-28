@@ -51,9 +51,8 @@ def test_missing_role_updating(root_auth_headers: dict[str, str], url_base: str)
 
 @pytest.mark.parametrize("url_base", ["v1"], indirect=True)
 def test_role_updating_missing_actions(root_auth_headers: dict[str, str], url_base: str):
-    response = requests.get(url_base + "access/role", headers=root_auth_headers, params={"name": "test_role"})
+    response = requests.get(url_base + "access/role", headers=root_auth_headers, json={"name": "test_role"})
     action_id = response.json()["role"]["id"]
-
     missing_actions = ",".join(["missing_action1", "missing_action2"])
     response = requests.put(
         url_base + "access/role",
@@ -66,14 +65,14 @@ def test_role_updating_missing_actions(root_auth_headers: dict[str, str], url_ba
 
 @pytest.mark.parametrize("url_base", ["v1"], indirect=True)
 def test_missing_role_deletion(root_auth_headers: dict[str, str], url_base: str):
-    response = requests.delete(url_base + "access/role", headers=root_auth_headers, params={"id": -1})
+    response = requests.delete(url_base + "access/role", headers=root_auth_headers, json={"id": -1})
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 @pytest.mark.parametrize("url_base", ["v1"], indirect=True)
 def test_role_deletion(root_auth_headers: dict[str, str], url_base: str):
-    response = requests.get(url_base + "access/role", headers=root_auth_headers, params={"name": "test_role"})
+    response = requests.get(url_base + "access/role", headers=root_auth_headers, json={"name": "test_role"})
     action_id = response.json()["role"]["id"]
 
-    response = requests.delete(url_base + "access/role", headers=root_auth_headers, params={"id": action_id})
+    response = requests.delete(url_base + "access/role", headers=root_auth_headers, json={"id": action_id})
     assert response.status_code == HTTPStatus.OK

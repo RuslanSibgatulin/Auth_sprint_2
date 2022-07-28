@@ -51,12 +51,11 @@ TODO: Актуализировать под текущий проект
 - http://127.0.0.1:16686/search
 
 ## Тестирование
-TODO: Актуализировать под текущий проект
-Тесты содержаться в диретории `tests/functional`. Для их запуска необходимо выполнить команду:
+Для запуска тестов необходимо выполнить команду:
 
-    cd tests/functional && docker-compose -f "docker-compose.yml" up -d --build
+    DOCKER_BUILDKIT=1 docker-compose -f prod.yaml -f test-override.yaml up --build --exit-code-from functional_tests --abort-on-container-exit
 
-Результат тестирования будет сформирован в директории `tests/tests_result` и будет доступен в 2 видах:
+Результат тестирования будет сформирован в директории `tests/tests_result` и доступен в 2 видах:
 - [как текстовый вывод pytest](tests/tests_result/tests_result.txt)
 - [как HTML-отчет](tests/tests_result/report.html)
 
