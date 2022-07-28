@@ -7,7 +7,7 @@ def test_existing_role_addition(root_auth_headers: dict[str, str], url_base: str
     response = requests.post(
         url_base + "access/role",
         headers=root_auth_headers,
-        params={"name": "superuser", "actions": ["role_read", "action_read"]},
+        json={"name": "superuser", "actions": ["role_read", "action_read"]},
     )
     assert response.status_code == 400
     assert response.json()["message"] == "Role superuser already exists"
@@ -19,7 +19,7 @@ def test_missing_actions_role_addition(root_auth_headers: dict[str, str], url_ba
     response = requests.post(
         url_base + "access/role",
         headers=root_auth_headers,
-        params={"name": "test_role", "actions": missing_actions},
+        json={"name": "test_role", "actions": missing_actions},
     )
     assert response.status_code == 400
     assert response.json()["message"] == f"Unknown actions: {missing_actions}"
@@ -30,7 +30,7 @@ def test_role_addition(root_auth_headers: dict[str, str], url_base: str):
     response = requests.post(
         url_base + "access/role",
         headers=root_auth_headers,
-        params={"name": "test_role", "actions": ["role_read", "action_read"]},
+        json={"name": "test_role", "actions": ["role_read", "action_read"]},
     )
     assert response.status_code == 201
     assert response.json()["message"] == "Role created."
@@ -41,7 +41,7 @@ def test_missing_role_updating(root_auth_headers: dict[str, str], url_base: str)
     response = requests.put(
         url_base + "access/role",
         headers=root_auth_headers,
-        params={"id": -1, "name": "role", "actions": "role_read"},
+        json={"id": -1, "name": "role", "actions": "role_read"},
     )
     assert response.status_code == 404
     assert response.json()["message"] == "Role with id -1 not found"
@@ -56,7 +56,7 @@ def test_role_updating_missing_actions(root_auth_headers: dict[str, str], url_ba
     response = requests.put(
         url_base + "access/role",
         headers=root_auth_headers,
-        params={"id": action_id, "name": "test_role", "actions": missing_actions},
+        json={"id": action_id, "name": "test_role", "actions": missing_actions},
     )
     assert response.status_code == 400
     assert response.json()["message"] == f"Unknown actions: {missing_actions}"

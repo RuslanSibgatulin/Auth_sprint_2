@@ -18,7 +18,7 @@ def test_create_users(
 ):
     response = requests.post(
         url_base + "sign-up",
-        params={"login": login, "email": email, "password": password, "second_password": second_password},
+        json={"login": login, "email": email, "password": password, "second_password": second_password},
     )
     assert response.status_code == code
     assert response.json()["message"] == message
@@ -36,7 +36,7 @@ def test_create_users(
 def test_login_user(url_base: str, login: str, password: str, message: str, code: int):
     resp = requests.post(
         url_base + "login",
-        params={
+        json={
             "login": login,
             "password": password,
         },
@@ -243,7 +243,7 @@ def test_change_user(
     access_token = token_pair.json()["access_token"]
     response = requests.put(
         url_base + "profile",
-        params={"login": new_login, "password": new_password, "old_password": password},
+        json={"login": new_login, "password": new_password, "old_password": password},
         headers={"User-Agent": "User Agent 1.0", "Authorization": f"Bearer {access_token}"},
     )
     assert response.status_code == code

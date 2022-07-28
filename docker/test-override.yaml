@@ -13,7 +13,7 @@ services:
       context: ..
       dockerfile: docker/dockerfiles/TestDockerfile
     depends_on:
-      app:
+      auth:
         condition: service_started
     env_file: envs/test.env
     volumes:
