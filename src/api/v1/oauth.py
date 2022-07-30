@@ -10,7 +10,7 @@ from api.base import BaseView
 from config import settings
 from db.controllers.users import UserController
 from db.redis import TokenStorage
-from utils import SocialUserPayload, TokenMaker
+from utils import Proveiders, SocialUserPayload, TokenMaker
 
 oauth = OAuth(app)
 
@@ -24,7 +24,7 @@ access_data = {
 }
 
 oauth.register(
-    "yandex",
+    Proveiders.YANDEX.value,
     client_id=settings.YANDEX_CLIENT_ID,
     client_secret=settings.YANDEX_CLIENT_SECRET,
     base_url="https://oauth.yandex.ru/",

@@ -1,3 +1,4 @@
+import enum
 import hashlib
 import string
 from dataclasses import dataclass
@@ -41,6 +42,10 @@ class SocialUserPayload:
     login: str
     email: str
     social_name: str
+
+
+class Proveiders(enum.Enum):
+    YANDEX = "yandex"
 
 
 class TokenMaker:
