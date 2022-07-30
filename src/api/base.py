@@ -1,11 +1,11 @@
 from functools import wraps
+from http import HTTPStatus
 from typing import List
 
+from db.controllers.actions import ActionController
 from flask_jwt_extended import verify_jwt_in_request
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
-
-from db.controllers.actions import ActionController
 
 
 class BaseView(Resource):
@@ -32,7 +32,7 @@ def requires_actions(actions: List[str]):
         def decorator(*args, **kwargs):
             _, jwt_data = verify_jwt_in_request()
             if not action_ids.intersection(jwt_data["sub"]["action_ids"]):
-                return {"message": "Not authorized"}, 403
+                return {"message": "Not authorized"}, HTTPStatus.FORBIDDEN
             return fn(*args, **kwargs)
 
         return decorator
