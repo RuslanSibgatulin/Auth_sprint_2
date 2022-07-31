@@ -4,8 +4,11 @@
 
 Формат основан на [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) и придерживается [Семантического управления версиями](https://semver.org/spec/v2.0.0.html).
 
-## [Неизданное]
-- OAuth2 авторизация через VK
+## [1.1.7] - 2022-07-31
+- Исправления [Fedor Kuzminov](https://github.com/Riyce).
+ 
+## [1.1.6] - 2022-07-30
+- OAuth2 авторизация через VK [Ruslan Sibgatulin](https://github.com/RuslanSibgatulin).
 
 ## [1.1.5] - 2022-07-26
 - Jaeger трассировка [Ruslan Sibgatulin](https://github.com/RuslanSibgatulin).

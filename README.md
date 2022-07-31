@@ -4,7 +4,7 @@
 
 
 Этот сервис будет аутентифицировать всех пользователей кинотеатра. Реализована возможность создать аккаунт используя учетную запись Yandex или VK.
-[Ссылка на приватный репозиторий с командной работой.](https://github.com/Riyce/Auth_sprint_2)
+[Ссылка на приватный репозиторий с командной работой.](https://github.com/RuslanSibgatulin/Auth_sprint_2)
 
 ## Используемые технологии
 - Код приложения на Python + Flask.
@@ -15,7 +15,7 @@
 
 # Запуск приложения
 ## Клонировать репозиторий
-    git clone https://github.com/Riyce/Auth_sprint_2.git
+    git clone git@github.com:RuslanSibgatulin/Auth_sprint_2.git
 
 ## Подготовка окружения
 Подготовить .env файл с переменными окружения по шаблону docker/envs/example.sample и сохранить под именем docker/envs/prod.env.
