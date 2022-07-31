@@ -1,16 +1,8 @@
 import hashlib
 import string
-from dataclasses import dataclass
 from secrets import choice
 
-from flask_jwt_extended import create_access_token, create_refresh_token
-
 from config import settings
-from db.models import User
-
-
-class CreationError(Exception):
-    pass
 
 
 class PasswordHasher:
@@ -33,22 +25,3 @@ class PasswordHasher:
     def generate_password(cls) -> str:
         alphabet = string.ascii_letters + string.digits
         return "".join(choice(alphabet) for _ in range(16))
-
-
-@dataclass
-class SocialUserPayload:
-    first_name: str
-    last_name: str
-    social_id: str
-    login: str
-    email: str
-    social_name: str
-
-
-class TokenMaker:
-    @classmethod
-    def create_tokens_pair(cls, user: User) -> tuple[str, str]:
-        action_ids = set([action.id for user_role in user.roles for action in user_role.role.actions])
-        access_token = create_access_token({"user_id": user.id, "action_ids": list(action_ids)})
-        refresh_token = create_refresh_token({"user_id": user.id})
-        return access_token, refresh_token
