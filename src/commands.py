@@ -6,7 +6,7 @@ from config import BASE_DIR
 from db.base import engine
 from db.base import init_db as init
 from db.controllers.users import UserController
-from utils import PasswordHasher
+from utils.password import PasswordHasher
 
 
 @user_blueprint.command("createsuperuser")

@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
-from utils import CreationError, PasswordHasher
+from utils.exceptions import CreationError
+from utils.password import PasswordHasher
 
 
 class BaseUser(BaseModel):

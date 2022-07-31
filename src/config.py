@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).parent.resolve()
 
 
 class PostgresDNS(BaseSettings):
-    POSTGRES_HOST: str = "postgres"
+    POSTGRES_HOST: str = "127.0.0.1"
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
@@ -41,8 +41,8 @@ class Settings(BaseSettings):
     HOURS_LIMIT: str = "10 per hour"
     JAEGER_HOST: str = "127.0.0.1"
     JAEGER_PORT: int = 6831
-    VK_APP_ID: int
-    VK_APP_SECURE_KEY: str
+    VK_APP_ID: int = 8226576
+    VK_APP_SECURE_KEY: str = "uuhYbEzcel7Pg736mzXz"
 
     @property
     def redis_uri(self) -> str:

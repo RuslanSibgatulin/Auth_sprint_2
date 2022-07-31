@@ -3,7 +3,8 @@ from sqlalchemy.orm.query import Query
 
 from db.base import db_session
 from db.models import LoginHistory, SocialAccount, User, UserRole
-from utils import PasswordHasher, SocialUserPayload
+from utils.oauth.payload import SocialUserPayload
+from utils.password import PasswordHasher
 
 
 class UserController:

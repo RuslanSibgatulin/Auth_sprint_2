@@ -9,7 +9,9 @@ from api.base import BaseView
 from db.controllers.users import UserController
 from db.redis import TokenStorage
 from models.users import CreateUser
-from utils import CreationError, PasswordHasher, TokenMaker
+from utils.exceptions import CreationError
+from utils.password import PasswordHasher
+from utils.tokens import TokenMaker
 
 user_blueprint = Blueprint("user", __name__)
 api = Api(user_blueprint)
