@@ -6,7 +6,7 @@ from flask_restful import Api
 from api.base import BaseView
 from db.controllers.users import UserController
 from db.redis import TokenStorage
-from utils.exceptions import OAuthError
+from utils.exceptions import OAuthEmailError
 from utils.oauth.providers import ProviderFactory
 from utils.tokens import TokenMaker
 
@@ -28,7 +28,7 @@ class SocialCallbackView(BaseView):
         service = ProviderFactory.get_service(provider)
         try:
             payload = service.get_user_payload()
-        except OAuthError:
+        except OAuthEmailError:
             return {
                 "message": f"Provider {provider} can`t return an email for your account. "
                 f"Choose another account or link your email with your {provider} account."

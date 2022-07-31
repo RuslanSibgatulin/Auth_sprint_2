@@ -1,4 +1,4 @@
-from utils.exceptions import OAuthError
+from utils.exceptions import OAuthEmailError
 from utils.oauth.enums import SocialPoviders
 from utils.oauth.payload import SocialUserPayload
 from utils.oauth.providers.base import BaseProviderService
@@ -12,7 +12,7 @@ class VKProviderService(BaseProviderService):
         user_data = userinfo.get("response")[0]
         email = token.get("email")
         if email is None:
-            raise OAuthError
+            raise OAuthEmailError
         return SocialUserPayload(
             first_name=user_data["first_name"],
             last_name=user_data["last_name"],

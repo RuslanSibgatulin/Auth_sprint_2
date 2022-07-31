@@ -2,5 +2,5 @@ class CreationError(Exception):
     pass
 
 
-class OAuthError(Exception):
+class OAuthEmailError(Exception):
     pass
