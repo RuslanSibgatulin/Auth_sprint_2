@@ -6,6 +6,7 @@ from authlib.integrations.flask_client import OAuth
 from config import settings
 from db.controllers.users import UserController
 from db.redis import TokenStorage
+
 from flask import Blueprint, url_for
 from flask import current_app as app
 from flask import request
