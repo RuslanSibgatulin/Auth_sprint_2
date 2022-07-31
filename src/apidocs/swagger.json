@@ -645,6 +645,46 @@
         ]
       }
     },
+    "/oauth/login/{provider}": {
+      "get": {
+        "description": "Login by user social account",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "provider",
+            "type": "string",
+            "required": true,
+            "description": "Registred OAuth2 provider",
+            "enum": [
+              "yandex",
+              "vk"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User logined",
+            "schema": {
+              "properties": {
+                "access_token": {
+                  "type": "string"
+                },
+                "refresh_token": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Wrong OAuth provider"
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
     "/login": {
       "post": {
         "parameters": [
