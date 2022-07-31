@@ -41,6 +41,8 @@ class Settings(BaseSettings):
     HOURS_LIMIT: str = "10 per hour"
     JAEGER_HOST: str = "127.0.0.1"
     JAEGER_PORT: int = 6831
+    VK_APP_ID: int
+    VK_APP_SECURE_KEY: str
 
     @property
     def redis_uri(self) -> str:
